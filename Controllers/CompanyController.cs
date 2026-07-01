@@ -8,5 +8,9 @@ namespace CoreMVCAppWithJenkins.Controllers
         {
             return View();
         }
+        public IActionResult Employee()
+        {
+            return View();
+        }
     }
 }
