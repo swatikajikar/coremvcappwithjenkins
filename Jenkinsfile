@@ -1,34 +1,35 @@
 pipeline {
     agent any
 
-    tools {
-        nodejs "NodeJs"
-    }
-
     stages {
 
-        stage("Install Dependencies") {
+        stage('Checkout') {
             steps {
-                bat "npm install"
+                git branch: 'master', url: 'https://github.com/swatikajikar/coremvcappwithjenkins.git'
             }
         }
 
-        stage("Test") {
+        stage('Restore') {
             steps {
-                echo "Testing the application"
+                bat 'dotnet restore'
             }
         }
 
-        stage("Build") {
+        stage('Build') {
             steps {
-                bat "npm run build"
+                bat 'dotnet build --configuration Release'
             }
         }
 
-        stage("Deployment") {
+        stage('Publish') {
             steps {
-                bat "del /q /s C:\\inetpub\\wwwroot\\reactapp\\*"
-                bat "xcopy /E /Y /I build\\* C:\\inetpub\\wwwroot\\reactapp\\"
+                bat 'dotnet publish --configuration Release --output publish'
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                bat 'xcopy /E /Y /I publish\\* C:\\inetpub\\wwwroot\\CoreMVCAppWithJenkins\\'
             }
         }
     }
