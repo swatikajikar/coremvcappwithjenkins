@@ -1,34 +1,29 @@
 pipeline {
     agent any
 
-    tools {
-        nodejs "NodeJs"
-    }
-
     stages {
 
-        stage("Install Dependencies") {
+        stage('Restore') {
             steps {
-                bat "npm install"
+                bat 'dotnet restore'
             }
         }
 
-        stage("Test") {
+        stage('Build') {
             steps {
-                echo "Testing the application"
+                bat 'dotnet build --configuration Release'
             }
         }
 
-        stage("Build") {
+        stage('Publish') {
             steps {
-                bat "npm run build"
+                bat 'dotnet publish --configuration Release -o publish'
             }
         }
 
-        stage("Deployment") {
+        stage('Deploy') {
             steps {
-                bat "del /q /s C:\\inetpub\\wwwroot\\reactapp\\*"
-                bat "xcopy /E /Y /I build\\* C:\\inetpub\\wwwroot\\reactapp\\"
+                bat 'xcopy /E /Y /I publish\\* C:\\inetpub\\wwwroot\\CoreMVCAppWithJenkins\\'
             }
         }
     }
