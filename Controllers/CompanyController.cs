@@ -12,5 +12,9 @@ namespace CoreMVCAppWithJenkins.Controllers
         {
             return View();
         }
+        public IActionResult Student()
+        {
+            return View();
+        }
     }
 }
